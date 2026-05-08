@@ -725,7 +725,7 @@ function sendMessage() {
   chatHistory.push({ role: 'user', content: text });
   showTyping();
 
-  fetch('/api/chat', {
+  fetch('https://ben-chat-proxy.cbhale21.workers.dev', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
