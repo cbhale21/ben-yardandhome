@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_37.html -->
+<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_40.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -139,7 +139,7 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
       <div class="form-field"><label for="lname">Last name</label><input type="text" id="lname" placeholder="Smith"></div>
     </div>
     <div class="form-row">
-      <div class="form-field"><label for="phone">Phone number</label><input type="tel" id="phone" placeholder="(480) 555-0100"></div>
+      <div class="form-field"><label for="phone">Phone number</label><input type="tel" id="phone" placeholder="(480) 555-0100" maxlength="14" oninput="formatPhone(this)" onkeydown="blockNonNumeric(event)"></div>
       <div class="form-field"><label for="email">Email address</label><input type="email" id="email" placeholder="jane@email.com"></div>
     </div>
     <div class="form-row full">
@@ -150,19 +150,19 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
         <label style="font-weight:700;font-size:12px;color:#5a6880;">Services needed</label>
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
           <div>
-            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-pressure-washing" value="Pressure washing" onchange="handleMultiCheck()" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Pressure washing</label>
+            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-pressure-washing" value="Pressure washing" onchange="handleMultiCheck(&#39;multi-pressure-washing&#39;)" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Pressure washing</label>
             <div id="multi-pressure-washing-fields" style="display:none;margin-top:8px;margin-left:25px;padding:12px;background:#f5f9ff;border-radius:10px;border:1px solid #dce8f5;"></div>
           </div>
           <div>
-            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-address-painting" value="Address painting" onchange="handleMultiCheck()" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Address painting</label>
+            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-address-painting" value="Address painting" onchange="handleMultiCheck(&#39;multi-address-painting&#39;)" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Address painting</label>
             <div id="multi-address-painting-fields" style="display:none;margin-top:8px;margin-left:25px;padding:12px;background:#f5f9ff;border-radius:10px;border:1px solid #dce8f5;"></div>
           </div>
           <div>
-            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-lawn-care" value="Lawn care" onchange="handleMultiCheck()" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Lawn care</label>
+            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-lawn-care" value="Lawn care" onchange="handleMultiCheck(&#39;multi-lawn-care&#39;)" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Lawn care</label>
             <div id="multi-lawn-care-fields" style="display:none;margin-top:8px;margin-left:25px;padding:12px;background:#f5f9ff;border-radius:10px;border:1px solid #dce8f5;"></div>
           </div>
           <div>
-            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-pet-waste-pickup" value="Pet waste pickup" onchange="handleMultiCheck()" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Pet waste pickup</label>
+            <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-pet-waste-pickup" value="Pet waste pickup" onchange="handleMultiCheck(&#39;multi-pet-waste-pickup&#39;)" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Pet waste pickup</label>
           </div>
         </div>
       </div>
@@ -283,7 +283,7 @@ function addressPaintFields(p) {
   return html;
 }
 
-function handleMultiCheck() {
+function handleMultiCheck(changedId) {
   var svs = [
     {value: 'Pressure washing', id: 'multi-pressure-washing'},
     {value: 'Address painting',  id: 'multi-address-painting'},
@@ -291,6 +291,8 @@ function handleMultiCheck() {
     {value: 'Pet waste pickup',  id: 'multi-pet-waste-pickup'}
   ];
   svs.forEach(function(sv) {
+    // Only process the checkbox that actually changed
+    if (changedId && sv.id !== changedId) return;
     var cb = document.getElementById(sv.id);
     var fd = document.getElementById(sv.id + '-fields');
     if (!cb) return;
@@ -298,32 +300,38 @@ function handleMultiCheck() {
     serviceState[sv.value].selected = cb.checked;
     if (!fd) return;
     if (cb.checked) {
-      fd.style.display = 'block';
-      var prefix = sv.id + '-';
-      if (sv.value === 'Lawn care') fd.innerHTML = lawnCareFields(prefix);
-      else if (sv.value === 'Pressure washing') fd.innerHTML = pressureWashFields(prefix);
-      else if (sv.value === 'Address painting') {
-        fd.innerHTML = addressPaintFields(prefix);
-        var noBtn  = document.getElementById(prefix + 'sf-custom-no');
-        var yesBtn = document.getElementById(prefix + 'sf-custom-yes');
-        var logoBox = document.getElementById(prefix + 'sf-logo-box');
-        if (noBtn) noBtn.addEventListener('change', function() {
-          if (noBtn.checked) {
-            updateState('Address painting', 'custom', 'No');
-            if (logoBox) logoBox.style.display = 'none';
+      // Only build fields if not already built
+      if (fd.innerHTML.trim() === '') {
+        fd.style.display = 'block';
+        var prefix = sv.id + '-';
+        if (sv.value === 'Lawn care') {
+          fd.innerHTML = lawnCareFields(prefix);
+        } else if (sv.value === 'Pressure washing') {
+          fd.innerHTML = pressureWashFields(prefix);
+        } else if (sv.value === 'Address painting') {
+          fd.innerHTML = addressPaintFields(prefix);
+          var noBtn  = document.getElementById(prefix + 'sf-custom-no');
+          var yesBtn = document.getElementById(prefix + 'sf-custom-yes');
+          var logoBox = document.getElementById(prefix + 'sf-logo-box');
+          if (noBtn) noBtn.addEventListener('change', function() {
+            if (noBtn.checked) {
+              updateState('Address painting', 'custom', 'No');
+              if (logoBox) logoBox.style.display = 'none';
+            }
+          });
+          if (yesBtn) yesBtn.addEventListener('change', function() {
+            if (yesBtn.checked) {
+              updateState('Address painting', 'custom', 'Yes');
+              if (logoBox) logoBox.style.display = 'block';
+            }
+          });
+          if (!serviceState['Address painting'].custom) {
+            serviceState['Address painting'].custom = 'No';
           }
-        });
-        if (yesBtn) yesBtn.addEventListener('change', function() {
-          if (yesBtn.checked) {
-            updateState('Address painting', 'custom', 'Yes');
-            if (logoBox) logoBox.style.display = 'block';
-          }
-        });
-        // Default state - only set if not already set
-        if (!serviceState['Address painting']) serviceState['Address painting'] = {};
-        if (!serviceState['Address painting'].custom) serviceState['Address painting'].custom = 'No';
+        }
+      } else {
+        fd.style.display = 'block';
       }
-      else fd.innerHTML = '';
     } else {
       fd.style.display = 'none';
       fd.innerHTML = '';
@@ -418,6 +426,40 @@ function getServiceDetails() {
 }
 
 
+function blockNonNumeric(e) {
+  // Allow: backspace, delete, tab, escape, enter, arrow keys
+  var allowed = [8,9,13,27,46,37,38,39,40];
+  if (allowed.indexOf(e.keyCode) !== -1) return;
+  // Block anything that isn't a number
+  if ((e.keyCode < 48 || e.keyCode > 57) && (e.keyCode < 96 || e.keyCode > 105)) {
+    e.preventDefault();
+  }
+}
+
+function formatPhone(el) {
+  // Strip everything except digits
+  var digits = el.value.replace(/\D/g, '').substring(0, 10);
+  var formatted = '';
+  if (digits.length === 0) {
+    formatted = '';
+  } else if (digits.length <= 3) {
+    formatted = '(' + digits;
+  } else if (digits.length <= 6) {
+    formatted = '(' + digits.substring(0,3) + ') ' + digits.substring(3);
+  } else {
+    formatted = '(' + digits.substring(0,3) + ') ' + digits.substring(3,6) + '-' + digits.substring(6);
+  }
+  el.value = formatted;
+}
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validatePhone(phone) {
+  return phone.replace(/\D/g, '').length === 10;
+}
+
 function submitBooking(){
   var fname=document.getElementById('fname').value.trim();
   var lname=document.getElementById('lname').value.trim();
@@ -428,8 +470,18 @@ function submitBooking(){
   var tm=document.getElementById('time').value;
   var notes=document.getElementById('notes').value.trim();
   var si=getServiceDetails();
-  if(!fname||!ph||!em||!a||si.services.length===0||!dt||!tm||tm==='Not available'||tm==='Pick a date first'||tm==='Checking availability...'){
-    alert('Please fill in all required fields, select at least one service, and choose an available date and time.');return;
+  // Field validation
+  var errors = [];
+  if (!fname) errors.push('First name is required');
+  if (!ph || !validatePhone(ph)) errors.push('Please enter a valid 10-digit phone number');
+  if (!em || !validateEmail(em)) errors.push('Please enter a valid email address');
+  if (!a) errors.push('Home address is required');
+  if (si.services.length === 0) errors.push('Please select at least one service');
+  if (!dt) errors.push('Please choose a preferred date');
+  if (!tm || tm === 'Not available' || tm === 'Pick a date first' || tm === 'Checking availability...') errors.push('Please choose an available time');
+  if (errors.length > 0) {
+    alert(errors.join('\n'));
+    return;
   }
   var btn=document.querySelector('.submit-btn');btn.textContent='Booking...';btn.disabled=true;
   var payload={name:fname+' '+lname,phone:ph,email:em,address:a,service:si.services.join(', '),date:dt,time:tm,notes:[notes,si.details].filter(Boolean).join(' | ')||'None'};
