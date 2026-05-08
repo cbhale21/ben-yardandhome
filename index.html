@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_34.html -->
+<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_35.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ben's Yard &amp; Home Services — Mesa, AZ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="./Ben&#39;s Yard &amp; Home Services — Mesa, AZ_files/css2" rel="stylesheet">
+<link href="./index_files/css2" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 100 100&#39;&gt;&lt;circle cx=&#39;50&#39; cy=&#39;50&#39; r=&#39;50&#39; fill=&#39;%23185FA5&#39;/&gt;&lt;text x=&#39;50&#39; y=&#39;72&#39; text-anchor=&#39;middle&#39; font-size=&#39;65&#39; font-family=&#39;Arial,sans-serif&#39; font-weight=&#39;bold&#39; fill=&#39;white&#39;&gt;B&lt;/text&gt;&lt;/svg&gt;">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -151,11 +151,11 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
         <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
           <div>
             <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-pressure-washing" value="Pressure washing" onchange="handleMultiCheck()" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Pressure washing</label>
-            <div id="multi-pressure-washing-fields" style="display: none; margin-top: 8px; margin-left: 25px; padding: 12px; background: rgb(245, 249, 255); border-radius: 10px; border: 1px solid rgb(220, 232, 245);"></div>
+            <div id="multi-pressure-washing-fields" style="display:none;margin-top:8px;margin-left:25px;padding:12px;background:#f5f9ff;border-radius:10px;border:1px solid #dce8f5;"></div>
           </div>
           <div>
             <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-address-painting" value="Address painting" onchange="handleMultiCheck()" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Address painting</label>
-            <div id="multi-address-painting-fields" style="display: none; margin-top: 8px; margin-left: 25px; padding: 12px; background: rgb(245, 249, 255); border-radius: 10px; border: 1px solid rgb(220, 232, 245);"></div>
+            <div id="multi-address-painting-fields" style="display:none;margin-top:8px;margin-left:25px;padding:12px;background:#f5f9ff;border-radius:10px;border:1px solid #dce8f5;"></div>
           </div>
           <div>
             <label style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;color:#042C53;"><input type="checkbox" id="multi-lawn-care" value="Lawn care" onchange="handleMultiCheck()" style="width:17px;height:17px;flex-shrink:0;accent-color:#185FA5;"> Lawn care</label>
@@ -238,121 +238,151 @@ function handleDate(){
     .catch(function(){ts.disabled=false;buildSlots('time',slots,[]);});
 }
 
-function lawnCareFields(p){
-  p=p||'';
+
+// ── State object: updated live as user interacts ──────────────────────────────
+var serviceState = {};
+
+function updateState(service, key, value) {
+  if (!serviceState[service]) serviceState[service] = {};
+  serviceState[service][key] = value;
+}
+
+// ── Field builders ─────────────────────────────────────────────────────────────
+function lawnCareFields(p) {
+  p = p || '';
   return '<label style="font-weight:700;font-size:12px;color:#5a6880;">Estimated yard size</label>'
-    +'<select id="'+p+'sf-yard" style="margin-top:6px;font-family:inherit;font-size:13px;padding:8px 10px;border:1.5px solid #d0dae8;border-radius:8px;">'
-    +'<option value="">Select one...</option>'
-    +'<option value="Less than 1,000 sq ft">Less than 1,000 sq ft ($30)</option>'
-    +'<option value="More than 1,000 sq ft">More than 1,000 sq ft (estimate on site)</option>'
-    +'<option value="Unknown size">I don’t know</option>'
-    +'</select>';
+    + '<select id="' + p + 'sf-yard" data-sv="Lawn care" data-key="yard" style="margin-top:6px;font-family:inherit;font-size:13px;padding:8px 10px;border:1.5px solid #d0dae8;border-radius:8px;">'
+    + '<option value="">Select one...</option>'
+    + '<option value="Less than 1,000 sq ft">Less than 1,000 sq ft ($30)</option>'
+    + '<option value="More than 1,000 sq ft">More than 1,000 sq ft (estimate on site)</option>'
+    + '<option value="Unknown size">I don’t know</option>'
+    + '</select>';
 }
 
-function pressureWashFields(p){
-  p=p||'';
+function pressureWashFields(p) {
+  p = p || '';
   return '<label style="font-weight:700;font-size:12px;color:#5a6880;">What needs to be pressure washed?</label>'
-    +'<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">'
-    +'<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="'+p+'sf-driveway" style="width:16px;height:16px;flex-shrink:0;accent-color:#185FA5;"> Driveway / walkway (~$0.15/sq ft)</label>'
-    +'<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="'+p+'sf-can1" style="width:16px;height:16px;flex-shrink:0;accent-color:#185FA5;"> 1 trash can ($20)</label>'
-    +'<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="'+p+'sf-can2" style="width:16px;height:16px;flex-shrink:0;accent-color:#185FA5;"> More than 1 trash can ($30 for 2, ask for quote for more)</label>'
-    +'</div>';
+    + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">'
+    + '<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="' + p + 'sf-driveway" data-sv="Pressure washing" data-key="driveway" style="width:16px;height:16px;flex-shrink:0;accent-color:#185FA5;"> Driveway / walkway (~$0.15/sq ft)</label>'
+    + '<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="' + p + 'sf-can1" data-sv="Pressure washing" data-key="can1" style="width:16px;height:16px;flex-shrink:0;accent-color:#185FA5;"> 1 trash can ($20)</label>'
+    + '<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="' + p + 'sf-can2" data-sv="Pressure washing" data-key="can2" style="width:16px;height:16px;flex-shrink:0;accent-color:#185FA5;"> More than 1 trash can ($30 for 2, ask for quote for more)</label>'
+    + '</div>';
 }
 
-function addressPaintFields(p){
-  p=p||'';
-  var html='<label style="font-weight:700;font-size:12px;color:#5a6880;">Custom logo or image?</label>';
-  html+='<div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">';
-  html+='<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;">';
-  html+='<input type="radio" name="'+p+'sf-custom" id="'+p+'sf-custom-no" value="No" checked> No — numbers only ($10)</label>';
-  html+='<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;">';
-  html+='<input type="radio" name="'+p+'sf-custom" id="'+p+'sf-custom-yes" value="Yes"> Yes — custom logo/image ($20)</label>';
-  html+='</div>';
-  html+='<div id="'+p+'sf-logo-box" style="display:none;margin-top:10px;">';
-  html+='<label style="font-weight:700;font-size:12px;color:#5a6880;">Describe your requested logo or image</label>';
-  html+='<textarea id="'+p+'sf-logo" placeholder="e.g. house outline with palm tree, family name..." style="margin-top:6px;min-height:60px;font-family:inherit;font-size:13px;width:100%;padding:9px 12px;border:1.5px solid #d0dae8;border-radius:10px;box-sizing:border-box;"></textarea>';
-  html+='</div>';
+function addressPaintFields(p) {
+  p = p || '';
+  var html = '<label style="font-weight:700;font-size:12px;color:#5a6880;">Custom logo or image?</label>';
+  html += '<div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">';
+  html += '<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="' + p + 'sf-custom" id="' + p + 'sf-custom-no" value="No" checked> No — numbers only ($10)</label>';
+  html += '<label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="' + p + 'sf-custom" id="' + p + 'sf-custom-yes" value="Yes"> Yes — custom logo/image ($20)</label>';
+  html += '</div>';
+  html += '<div id="' + p + 'sf-logo-box" style="display:none;margin-top:10px;">';
+  html += '<label style="font-weight:700;font-size:12px;color:#5a6880;">Describe your requested logo or image</label>';
+  html += '<textarea id="' + p + 'sf-logo" data-sv="Address painting" data-key="logo" placeholder="e.g. house outline with palm tree, family name..." style="margin-top:6px;min-height:60px;font-family:inherit;font-size:13px;width:100%;padding:9px 12px;border:1.5px solid #d0dae8;border-radius:10px;box-sizing:border-box;"></textarea>';
+  html += '</div>';
   return html;
 }
 
-function toggleLogoBox(p){
-  p=p||'';
-  var yes=document.getElementById(p+'sf-custom-yes');
-  var box=document.getElementById(p+'sf-logo-box');
-  if(yes&&box)box.style.display=yes.checked?'block':'none';
-}
-
-function handleMultiCheck(){
-  var svs=[
-    {value:'Pressure washing',id:'multi-pressure-washing'},
-    {value:'Address painting',id:'multi-address-painting'},
-    {value:'Lawn care',id:'multi-lawn-care'},
-    {value:'Pet waste pickup',id:'multi-pet-waste-pickup'}
+function handleMultiCheck() {
+  var svs = [
+    {value: 'Pressure washing', id: 'multi-pressure-washing'},
+    {value: 'Address painting',  id: 'multi-address-painting'},
+    {value: 'Lawn care',         id: 'multi-lawn-care'},
+    {value: 'Pet waste pickup',  id: 'multi-pet-waste-pickup'}
   ];
-  svs.forEach(function(sv){
-    var cb=document.getElementById(sv.id);
-    var fd=document.getElementById(sv.id+'-fields');
-    if(!cb||!fd)return;
-    if(cb.checked){
-      fd.style.display='block';
-      var prefix=sv.id+'-';
-      if(sv.value==='Lawn care')fd.innerHTML=lawnCareFields(prefix);
-      else if(sv.value==='Pressure washing')fd.innerHTML=pressureWashFields(prefix);
-      else if(sv.value==='Address painting'){
-        fd.innerHTML=addressPaintFields(prefix);
-        var noBtn=document.getElementById(prefix+'sf-custom-no');
-        var yesBtn=document.getElementById(prefix+'sf-custom-yes');
-        var logoBox=document.getElementById(prefix+'sf-logo-box');
-        if(noBtn)noBtn.addEventListener('change',function(){if(logoBox)logoBox.style.display='none';});
-        if(yesBtn)yesBtn.addEventListener('change',function(){if(logoBox)logoBox.style.display='block';});
+  svs.forEach(function(sv) {
+    var cb = document.getElementById(sv.id);
+    var fd = document.getElementById(sv.id + '-fields');
+    if (!cb) return;
+    if (!serviceState[sv.value]) serviceState[sv.value] = {};
+    serviceState[sv.value].selected = cb.checked;
+    if (!fd) return;
+    if (cb.checked) {
+      fd.style.display = 'block';
+      var prefix = sv.id + '-';
+      if (sv.value === 'Lawn care') fd.innerHTML = lawnCareFields(prefix);
+      else if (sv.value === 'Pressure washing') fd.innerHTML = pressureWashFields(prefix);
+      else if (sv.value === 'Address painting') {
+        fd.innerHTML = addressPaintFields(prefix);
+        var noBtn  = document.getElementById(prefix + 'sf-custom-no');
+        var yesBtn = document.getElementById(prefix + 'sf-custom-yes');
+        var logoBox = document.getElementById(prefix + 'sf-logo-box');
+        if (noBtn) noBtn.addEventListener('change', function() {
+          updateState('Address painting', 'custom', 'No');
+          if (logoBox) logoBox.style.display = 'none';
+        });
+        if (yesBtn) yesBtn.addEventListener('change', function() {
+          updateState('Address painting', 'custom', 'Yes');
+          if (logoBox) logoBox.style.display = 'block';
+        });
+        // Default state
+        updateState('Address painting', 'custom', 'No');
       }
-      else fd.innerHTML='';
-    }else{fd.style.display='none';fd.innerHTML='';}
+      else fd.innerHTML = '';
+    } else {
+      fd.style.display = 'none';
+      fd.innerHTML = '';
+      serviceState[sv.value] = { selected: false };
+    }
   });
 }
 
-function getServiceDetails(){
-  var svs=[
-    {value:'Pressure washing',id:'multi-pressure-washing'},
-    {value:'Address painting',id:'multi-address-painting'},
-    {value:'Lawn care',id:'multi-lawn-care'},
-    {value:'Pet waste pickup',id:'multi-pet-waste-pickup'}
+// Event delegation for all dynamic service fields
+document.addEventListener('change', function(e) {
+  var el = e.target;
+  var sv = el.getAttribute('data-sv');
+  var key = el.getAttribute('data-key');
+  if (!sv || !key) return;
+  if (!serviceState[sv]) serviceState[sv] = {};
+  serviceState[sv][key] = el.type === 'checkbox' ? el.checked : el.value;
+});
+document.addEventListener('input', function(e) {
+  var el = e.target;
+  var sv = el.getAttribute('data-sv');
+  var key = el.getAttribute('data-key');
+  if (!sv || !key) return;
+  if (!serviceState[sv]) serviceState[sv] = {};
+  serviceState[sv][key] = el.value;
+});
+
+
+function getServiceDetails() {
+  var svs = [
+    {value: 'Pressure washing', id: 'multi-pressure-washing'},
+    {value: 'Address painting',  id: 'multi-address-painting'},
+    {value: 'Lawn care',         id: 'multi-lawn-care'},
+    {value: 'Pet waste pickup',  id: 'multi-pet-waste-pickup'}
   ];
-  var selected=[],extras=[];
-  svs.forEach(function(sv){
-    var cb=document.getElementById(sv.id);
-    if(!cb||!cb.checked)return;
+  var selected = [], extras = [];
+  svs.forEach(function(sv) {
+    var cb = document.getElementById(sv.id);
+    if (!cb || !cb.checked) return;
     selected.push(sv.value);
-    var p=sv.id+'-';
-    if(sv.value==='Lawn care'){
-      // yard select could have prefix or no prefix
-      var yard=document.getElementById(p+'sf-yard')||document.getElementById('sf-yard');
-      if(yard&&yard.value)extras.push('Yard size: '+yard.value);
-    } else if(sv.value==='Pressure washing'){
-      var items=[];
-      var drv=document.getElementById(p+'sf-driveway');
-      var c1=document.getElementById(p+'sf-can1');
-      var c2=document.getElementById(p+'sf-can2');
-      if(drv&&drv.checked)items.push('Driveway/walkway');
-      if(c1&&c1.checked)items.push('1 trash can');
-      if(c2&&c2.checked)items.push('2+ trash cans');
-      extras.push('Pressure wash: '+(items.length?items.join(', '):'no items selected'));
-    } else if(sv.value==='Address painting'){
-      // Read the radio group by name to find which is selected
-      var radios=document.querySelectorAll('input[name="'+p+'sf-custom"]');
-      var customVal='No';
-      radios.forEach(function(r){if(r.checked)customVal=r.value;});
-      if(customVal==='Yes'){
+    var st = serviceState[sv.value] || {};
+
+    if (sv.value === 'Lawn care') {
+      if (st.yard) extras.push('Yard size: ' + st.yard);
+
+    } else if (sv.value === 'Pressure washing') {
+      var items = [];
+      if (st.driveway) items.push('Driveway/walkway');
+      if (st.can1)     items.push('1 trash can');
+      if (st.can2)     items.push('2+ trash cans');
+      extras.push('Pressure wash: ' + (items.length ? items.join(', ') : 'no specific items selected'));
+
+    } else if (sv.value === 'Address painting') {
+      var custom = st.custom || 'No';
+      if (custom === 'Yes') {
         extras.push('Custom logo: Yes');
-        var logo=document.getElementById(p+'sf-logo');
-        if(logo&&logo.value.trim())extras.push('Logo description: '+logo.value.trim());
+        if (st.logo && st.logo.trim()) extras.push('Logo description: ' + st.logo.trim());
       } else {
         extras.push('Custom logo: No (numbers only)');
       }
     }
   });
-  return{services:selected,details:extras.join(' | ')};
+  return { services: selected, details: extras.join(' | ') };
 }
+
 
 function submitBooking(){
   var fname=document.getElementById('fname').value.trim();
