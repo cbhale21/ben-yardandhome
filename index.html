@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_36.html -->
+<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_37.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -308,15 +308,20 @@ function handleMultiCheck() {
         var yesBtn = document.getElementById(prefix + 'sf-custom-yes');
         var logoBox = document.getElementById(prefix + 'sf-logo-box');
         if (noBtn) noBtn.addEventListener('change', function() {
-          updateState('Address painting', 'custom', 'No');
-          if (logoBox) logoBox.style.display = 'none';
+          if (noBtn.checked) {
+            updateState('Address painting', 'custom', 'No');
+            if (logoBox) logoBox.style.display = 'none';
+          }
         });
         if (yesBtn) yesBtn.addEventListener('change', function() {
-          updateState('Address painting', 'custom', 'Yes');
-          if (logoBox) logoBox.style.display = 'block';
+          if (yesBtn.checked) {
+            updateState('Address painting', 'custom', 'Yes');
+            if (logoBox) logoBox.style.display = 'block';
+          }
         });
-        // Default state
-        updateState('Address painting', 'custom', 'No');
+        // Default state - only set if not already set
+        if (!serviceState['Address painting']) serviceState['Address painting'] = {};
+        if (!serviceState['Address painting'].custom) serviceState['Address painting'].custom = 'No';
       }
       else fd.innerHTML = '';
     } else {
