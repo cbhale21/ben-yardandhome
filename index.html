@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_35.html -->
+<!-- saved from url=(0061)file:///C:/Users/Cbhal/Downloads/bens-services-v2-fun_36.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ben's Yard &amp; Home Services — Mesa, AZ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="./index_files/css2" rel="stylesheet">
+<link href="./Ben&#39;s Yard &amp; Home Services — Mesa, AZ_files/css2" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=&#39;http://www.w3.org/2000/svg&#39; viewBox=&#39;0 0 100 100&#39;&gt;&lt;circle cx=&#39;50&#39; cy=&#39;50&#39; r=&#39;50&#39; fill=&#39;%23185FA5&#39;/&gt;&lt;text x=&#39;50&#39; y=&#39;72&#39; text-anchor=&#39;middle&#39; font-size=&#39;65&#39; font-family=&#39;Arial,sans-serif&#39; font-weight=&#39;bold&#39; fill=&#39;white&#39;&gt;B&lt;/text&gt;&lt;/svg&gt;">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -359,22 +359,51 @@ function getServiceDetails() {
     if (!cb || !cb.checked) return;
     selected.push(sv.value);
     var st = serviceState[sv.value] || {};
+    var p = sv.id + '-';
 
     if (sv.value === 'Lawn care') {
-      if (st.yard) extras.push('Yard size: ' + st.yard);
+      // Check state object first, then DOM
+      var yardVal = st.yard;
+      if (!yardVal) {
+        var yardEl = document.getElementById(p + 'sf-yard') || document.getElementById('sf-yard');
+        if (yardEl) yardVal = yardEl.value;
+      }
+      if (yardVal) extras.push('Yard size: ' + yardVal);
 
     } else if (sv.value === 'Pressure washing') {
       var items = [];
+      // Check state object
       if (st.driveway) items.push('Driveway/walkway');
       if (st.can1)     items.push('1 trash can');
       if (st.can2)     items.push('2+ trash cans');
+      // Also check DOM directly as fallback
+      if (!items.length) {
+        var drvEl = document.getElementById(p + 'sf-driveway');
+        var c1El  = document.getElementById(p + 'sf-can1');
+        var c2El  = document.getElementById(p + 'sf-can2');
+        if (drvEl && drvEl.checked) items.push('Driveway/walkway');
+        if (c1El  && c1El.checked)  items.push('1 trash can');
+        if (c2El  && c2El.checked)  items.push('2+ trash cans');
+      }
       extras.push('Pressure wash: ' + (items.length ? items.join(', ') : 'no specific items selected'));
 
     } else if (sv.value === 'Address painting') {
-      var custom = st.custom || 'No';
+      // Check state object first, then DOM
+      var custom = st.custom;
+      if (!custom) {
+        // Read radio group directly from DOM
+        var radios = document.querySelectorAll('input[name="' + p + 'sf-custom"]');
+        radios.forEach(function(r) { if (r.checked) custom = r.value; });
+      }
+      custom = custom || 'No';
       if (custom === 'Yes') {
         extras.push('Custom logo: Yes');
-        if (st.logo && st.logo.trim()) extras.push('Logo description: ' + st.logo.trim());
+        var logoVal = st.logo;
+        if (!logoVal) {
+          var logoEl = document.getElementById(p + 'sf-logo');
+          if (logoEl) logoVal = logoEl.value;
+        }
+        if (logoVal && logoVal.trim()) extras.push('Logo description: ' + logoVal.trim());
       } else {
         extras.push('Custom logo: No (numbers only)');
       }
@@ -399,6 +428,8 @@ function submitBooking(){
   }
   var btn=document.querySelector('.submit-btn');btn.textContent='Booking...';btn.disabled=true;
   var payload={name:fname+' '+lname,phone:ph,email:em,address:a,service:si.services.join(', '),date:dt,time:tm,notes:[notes,si.details].filter(Boolean).join(' | ')||'None'};
+  console.log('DEBUG serviceState:', JSON.stringify(serviceState));
+  console.log('DEBUG si:', JSON.stringify(si));
   var params='?action=book'
     +'&date='+encodeURIComponent(payload.date)
     +'&time='+encodeURIComponent(payload.time)
