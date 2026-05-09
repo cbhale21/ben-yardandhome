@@ -639,25 +639,34 @@ function validatePhone(phone) {
 function getSuggestedTimes() {
   var today = new Date();
   var suggestions = [];
-  var daysChecked = 0;
   var d = new Date(today);
-  d.setDate(d.getDate() + 1); // start from tomorrow
+  d.setDate(d.getDate() + 1);
 
-  while (suggestions.length < 2 && daysChecked < 14) {
+  // Find next available weekday (Mon-Fri, not Sunday)
+  var weekdayFound = null;
+  var saturdayFound = null;
+  var daysChecked = 0;
+
+  while ((!weekdayFound || !saturdayFound) && daysChecked < 21) {
     var day = d.getDay();
-    var isSun = day === 0;
-    if (!isSun) {
-      var slots = day === 6 ? SAT : day === 3 ? WED : WD;
-      if (slots.length > 0) {
-        var yyyy = d.getFullYear();
-        var mm = String(d.getMonth()+1).padStart(2,'0');
-        var dd = String(d.getDate()).padStart(2,'0');
-        suggestions.push({ date: yyyy+'-'+mm+'-'+dd, time: slots[0], day: d });
-      }
+    var yyyy = d.getFullYear();
+    var mm = String(d.getMonth()+1).padStart(2,'0');
+    var dd = String(d.getDate()).padStart(2,'0');
+    var dateStr = yyyy+'-'+mm+'-'+dd;
+
+    if (!weekdayFound && day >= 1 && day <= 5) {
+      var slots = day === 3 ? WED : WD;
+      if (slots.length > 0) weekdayFound = { date: dateStr, time: slots[0] };
+    }
+    if (!saturdayFound && day === 6) {
+      if (SAT.length > 0) saturdayFound = { date: dateStr, time: SAT[0] };
     }
     d = new Date(d); d.setDate(d.getDate()+1);
     daysChecked++;
   }
+
+  if (weekdayFound) suggestions.push(weekdayFound);
+  if (saturdayFound) suggestions.push(saturdayFound);
   return suggestions;
 }
 
