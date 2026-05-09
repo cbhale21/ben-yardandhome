@@ -72,6 +72,19 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
 .success-title{font-size:17px;font-weight:700;color:#042C53;}
 .success-sub{font-size:13px;color:#5a6880;margin-top:6px;}
 .footer{border-top:1px solid #e8edf3;padding:18px;text-align:center;font-size:12px;color:#aab;}
+  .photo-card{border-radius:14px;overflow:hidden;border:1.5px solid #e8edf3;background:#fff;}
+  .photo-card-imgs{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+  .photo-card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;}
+  .photo-card-labels{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+  .photo-card-label{font-size:10px;font-weight:700;text-align:center;padding:4px;letter-spacing:.05em;text-transform:uppercase;}
+  .photo-card-label.before{background:#FCEBEB;color:#A32D2D;}
+  .photo-card-label.after{background:#E1F5EE;color:#085041;}
+  .photo-card-caption{padding:10px 14px;font-size:13px;color:#5a6880;font-weight:500;}
+  .testimonial-card{background:#fff;border-radius:14px;padding:18px;border:1.5px solid #dce8f5;}
+  .testimonial-stars{color:#F59E0B;font-size:14px;margin-bottom:8px;}
+  .testimonial-text{font-size:13px;color:#042C53;line-height:1.6;margin-bottom:10px;font-style:italic;}
+  .testimonial-author{font-size:12px;font-weight:700;color:#185FA5;}
+  .testimonial-meta{font-size:11px;color:#aab;margin-top:2px;}
 @media(max-width:480px){.form-row{grid-template-columns:1fr;}.hero{padding:36px 20px 30px;}}
   .hero-right{display:none;}
   .hero-left{width:100%;}
@@ -95,6 +108,10 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
     .about-band{display:none;}
     .section-label{text-align:left;padding:28px 80px 14px;}
     .services{grid-template-columns:repeat(3,1fr);padding:0 80px 24px;gap:18px;}
+    #photos-section{padding:0 80px 8px;}
+    #photos-grid{grid-template-columns:repeat(3,1fr);}
+    #testimonials-section{padding:0 80px 8px;}
+    #testimonials-grid{grid-template-columns:repeat(3,1fr);}
     .scard{padding:26px 22px;}
     .booking{margin:0;border-radius:0;border:none;border-top:1px solid #e8edf3;padding:36px 80px 48px;background:#fff;}
     .booking-inner-desktop{max-width:960px;margin:0 auto;}
@@ -229,6 +246,23 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
   </div>
 </div>
 
+<!-- Before & After Photos -->
+<div id="photos-section" style="background:#fff;padding:0 18px 8px;">
+  <div class="section-label" style="padding:28px 0 14px;">Before &amp; After</div>
+  <div id="photos-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;padding-bottom:24px;">
+    <div style="text-align:center;color:#aab;font-size:13px;padding:24px;">Loading photos...</div>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<div id="testimonials-section" style="background:#f5f9ff;padding:0 18px 8px;border-top:1px solid #e8edf3;">
+  <div class="section-label" style="padding:28px 0 14px;">What Neighbors Are Saying</div>
+  <div id="testimonials-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;padding-bottom:28px;">
+    <div style="text-align:center;color:#aab;font-size:13px;padding:24px;">Loading reviews...</div>
+  </div>
+</div>
+
+
 <div class="booking">
   <div class="booking-header"><div class="booking-dot"></div><div class="booking-title">Book a time with Ben</div></div>
   <div class="booking-sub">Fill this out and Ben will call or text to confirm within 24 hours.</div>
@@ -278,6 +312,28 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
         <select id="time"><option value="">Pick a date first</option></select>
       </div>
     </div>
+    <!-- Suggested times banner -->
+    <div id="suggested-times" style="display:none;" class="form-row full">
+      <div style="background:#E6F1FB;border-radius:10px;padding:12px 16px;border:1.5px solid #85B7EB;">
+        <div style="font-size:12px;font-weight:700;color:#0C447C;margin-bottom:8px;">&#x26A1; Suggested available times:</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;" id="suggested-slots"></div>
+      </div>
+    </div>
+
+    <!-- Recurring service option -->
+    <div class="form-row full">
+      <div class="form-field">
+        <label style="font-weight:700;font-size:12px;color:#5a6880;">Recurring service?</label>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
+          <label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="recurring" id="rec-no" value="none" checked onchange="handleRecurring()"> One-time only</label>
+          <label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="recurring" id="rec-weekly" value="weekly" onchange="handleRecurring()"> Weekly</label>
+          <label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="recurring" id="rec-biweekly" value="biweekly" onchange="handleRecurring()"> Bi-weekly</label>
+          <label style="font-size:13px;font-weight:400;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="radio" name="recurring" id="rec-monthly" value="monthly" onchange="handleRecurring()"> Monthly</label>
+        </div>
+        <div id="recurring-note" style="display:none;font-size:12px;color:#0C447C;background:#E6F1FB;border-radius:8px;padding:8px 12px;margin-top:8px;"></div>
+      </div>
+    </div>
+
     <div class="form-row full">
       <div class="form-field">
         <label for="notes">Anything else? (optional)</label>
@@ -321,10 +377,10 @@ body{font-family:'Nunito',sans-serif;background:#dce8f5;color:#042C53;}
 </div>
 
 <script>
-var CALENDAR_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqI3V27_Xv5v6iUdw_TLdKa6pFszo1naQSHfVgPxfBxkGebfsjFty2ZY_O7lLGPQLsVw/exec';
-var WD=['4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM'];
-var WED=['2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM'];
-var SAT=['8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM'];
+var CALENDAR_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXvdMBuTsfioU3okXEQKyK3D0P8ZCfzri_pujwWdpmp_4F-W2s4GRXSWXHdLOR7a3W3Q/exec';
+var WD=['4:00 PM','4:30 PM','5:00 PM','5:30 PM'];
+var WED=['2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM'];
+var SAT=['8:00 AM','8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM'];
 
 function buildSlots(id,slots,busySlots){
   var s=document.getElementById(id);s.innerHTML='';
@@ -579,6 +635,105 @@ function validatePhone(phone) {
   return phone.replace(/\D/g, '').length === 10;
 }
 
+// ── Feature 2: Suggested times ───────────────────────────────────────────────
+function getSuggestedTimes() {
+  var today = new Date();
+  var suggestions = [];
+  var daysChecked = 0;
+  var d = new Date(today);
+  d.setDate(d.getDate() + 1); // start from tomorrow
+
+  while (suggestions.length < 2 && daysChecked < 14) {
+    var day = d.getDay();
+    var isSun = day === 0;
+    if (!isSun) {
+      var slots = day === 6 ? SAT : day === 3 ? WED : WD;
+      if (slots.length > 0) {
+        var yyyy = d.getFullYear();
+        var mm = String(d.getMonth()+1).padStart(2,'0');
+        var dd = String(d.getDate()).padStart(2,'0');
+        suggestions.push({ date: yyyy+'-'+mm+'-'+dd, time: slots[0], day: d });
+      }
+    }
+    d = new Date(d); d.setDate(d.getDate()+1);
+    daysChecked++;
+  }
+  return suggestions;
+}
+
+function formatSuggestedDate(dateStr) {
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var p = dateStr.split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
+  return days[d.getDay()] + ' ' + months[d.getMonth()] + ' ' + d.getDate();
+}
+
+function showSuggestions() {
+  var suggestions = getSuggestedTimes();
+  var container = document.getElementById('suggested-slots');
+  var wrapper = document.getElementById('suggested-times');
+  if (!container || !suggestions.length) return;
+  container.innerHTML = '';
+  suggestions.forEach(function(s) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = formatSuggestedDate(s.date) + ' at ' + s.time;
+    btn.style.cssText = 'background:#185FA5;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;';
+    btn.onmouseover = function(){ this.style.background='#0C447C'; };
+    btn.onmouseout  = function(){ this.style.background='#185FA5'; };
+    btn.onclick = function() {
+      document.getElementById('date').value = s.date;
+      handleDate();
+      // After slots load, select this time
+      setTimeout(function() {
+        var timeEl = document.getElementById('time');
+        for (var i=0; i<timeEl.options.length; i++) {
+          if (timeEl.options[i].value === s.time) { timeEl.selectedIndex = i; break; }
+        }
+        handleRecurring();
+      }, 1200);
+    };
+    container.appendChild(btn);
+  });
+  wrapper.style.display = 'block';
+}
+
+// Show suggestions on page load
+window.addEventListener('load', function() { setTimeout(showSuggestions, 500); });
+
+// ── Feature 3: Recurring services ────────────────────────────────────────────
+function handleRecurring() {
+  var val = document.querySelector('input[name="recurring"]:checked');
+  var note = document.getElementById('recurring-note');
+  var dt = document.getElementById('date').value;
+  var tm = document.getElementById('time').value;
+  if (!val || val.value === 'none') { note.style.display='none'; return; }
+  if (!dt || !tm || tm==='Pick a date first' || tm==='Not available' || tm==='Checking availability...') {
+    note.textContent = 'Please select a date and time first to see your recurring schedule.';
+    note.style.display = 'block'; return;
+  }
+  var p = dt.split('-'), d = new Date(+p[0],+p[1]-1,+p[2]);
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dayName = days[d.getDay()];
+  var dateStr = months[d.getMonth()] + ' ' + d.getDate();
+  var msgs = {
+    weekly:   'Every ' + dayName + ' at ' + tm + ', starting ' + dateStr + '. Ben will schedule recurring appointments on his calendar.',
+    biweekly: 'Every other ' + dayName + ' at ' + tm + ', starting ' + dateStr + '. Ben will schedule recurring appointments on his calendar.',
+    monthly:  'Once a month on the ' + getOrdinal(d) + ' ' + dayName + ' of each month at ' + tm + ', starting ' + dateStr + '. Ben will schedule recurring appointments on his calendar.'
+  };
+  note.textContent = msgs[val.value];
+  note.style.display = 'block';
+}
+
+function getOrdinal(d) {
+  // Returns "first", "second", "third", "fourth" based on which occurrence in month
+  var week = Math.ceil(d.getDate() / 7);
+  return ['first','second','third','fourth','fifth'][week-1] || 'last';
+}
+
+
 function submitBooking(){
   var fname=document.getElementById('fname').value.trim();
   var lname=document.getElementById('lname').value.trim();
@@ -603,9 +758,7 @@ function submitBooking(){
     return;
   }
   var btn=document.querySelector('.submit-btn');btn.textContent='Booking...';btn.disabled=true;
-  var payload={name:fname+' '+lname,phone:ph,email:em,address:a,service:si.services.join(', '),date:dt,time:tm,notes:[notes,si.details].filter(Boolean).join(' | ')||'None'};
-  console.log('DEBUG serviceState:', JSON.stringify(serviceState));
-  console.log('DEBUG si:', JSON.stringify(si));
+  var recurringEl=document.querySelector('input[name="recurring"]:checked');var recurring=recurringEl?recurringEl.value:'none';var payload={name:fname+' '+lname,phone:ph,email:em,address:a,service:si.services.join(', '),date:dt,time:tm,recurring:recurring,notes:[notes,si.details].filter(Boolean).join(' | ')||'None'};
   var params='?action=book'
     +'&date='+encodeURIComponent(payload.date)
     +'&time='+encodeURIComponent(payload.time)
@@ -614,6 +767,7 @@ function submitBooking(){
     +'&email='+encodeURIComponent(payload.email)
     +'&address='+encodeURIComponent(payload.address)
     +'&service='+encodeURIComponent(payload.service)
+    +'&recurring='+encodeURIComponent(payload.recurring)
     +'&notes='+encodeURIComponent(payload.notes);
   fetch(CALENDAR_SCRIPT_URL+params)
     .then(function(r){return r.json();})
@@ -733,7 +887,7 @@ function notifyContact(data) {
       conversation: summary
     };
 
-    fetch('https://script.google.com/macros/s/AKfycbyqI3V27_Xv5v6iUdw_TLdKa6pFszo1naQSHfVgPxfBxkGebfsjFty2ZY_O7lLGPQLsVw/exec?action=chatLead' +
+    fetch('https://script.google.com/macros/s/AKfycbwXvdMBuTsfioU3okXEQKyK3D0P8ZCfzri_pujwWdpmp_4F-W2s4GRXSWXHdLOR7a3W3Q/exec?action=chatLead' +
       '&name='     + encodeURIComponent(payload.name) +
       '&phone='    + encodeURIComponent(payload.phone) +
       '&email='    + encodeURIComponent(payload.email) +
@@ -843,6 +997,91 @@ function sendMessage() {
     sendBtn.disabled = false;
   });
 }
+
+// ── Photos & Testimonials from Google Sheets ─────────────────────────────────
+var SHEET_ID = '1xkdLnbieV0LEdC9xnnjyPPZBgThbHXNuhoJHrD9zEFU';
+
+function loadPhotos() {
+  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=Photos';
+  fetch(url)
+    .then(function(r){ return r.text(); })
+    .then(function(text) {
+      var json = JSON.parse(text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');',''));
+      var rows = json.table.rows;
+      var grid = document.getElementById('photos-grid');
+      var cards = [];
+      rows.forEach(function(row) {
+        var before  = row.c[0] ? row.c[0].v : '';
+        var after   = row.c[1] ? row.c[1].v : '';
+        var caption = row.c[2] ? row.c[2].v : '';
+        var active  = row.c[3] ? row.c[3].v : '';
+        if (active && active.toString().toUpperCase() === 'TRUE' && before && after) {
+          cards.push({before:before, after:after, caption:caption});
+        }
+      });
+      if (!cards.length) { grid.innerHTML = '<div style="text-align:center;color:#aab;font-size:13px;padding:24px;grid-column:1/-1;">Photos coming soon!</div>'; return; }
+      grid.innerHTML = '';
+      cards.forEach(function(card) {
+        var div = document.createElement('div');
+        div.className = 'photo-card';
+        div.innerHTML = '<div class="photo-card-imgs">'
+          + '<img class="photo-card-img" src="' + card.before + '" alt="Before" onerror="this.src=\'\';this.style.background=\'#f0f0f0\'">'
+          + '<img class="photo-card-img" src="' + card.after  + '" alt="After"  onerror="this.src=\'\';this.style.background=\'#f0f0f0\'">'
+          + '</div>'
+          + '<div class="photo-card-labels"><div class="photo-card-label before">Before</div><div class="photo-card-label after">After</div></div>'
+          + (card.caption ? '<div class="photo-card-caption">' + card.caption + '</div>' : '');
+        grid.appendChild(div);
+      });
+    })
+    .catch(function() {
+      document.getElementById('photos-grid').innerHTML = '<div style="text-align:center;color:#aab;font-size:13px;padding:24px;grid-column:1/-1;">Photos coming soon!</div>';
+    });
+}
+
+function loadTestimonials() {
+  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=Testimonials';
+  fetch(url)
+    .then(function(r){ return r.text(); })
+    .then(function(text) {
+      var json = JSON.parse(text.replace('/*O_o*/\ngoogle.visualization.Query.setResponse(', '').replace(');',''));
+      var rows = json.table.rows;
+      var grid = document.getElementById('testimonials-grid');
+      var cards = [];
+      rows.forEach(function(row) {
+        var name    = row.c[0] ? row.c[0].v : '';
+        var loc     = row.c[1] ? row.c[1].v : '';
+        var service = row.c[2] ? row.c[2].v : '';
+        var rating  = row.c[3] ? parseInt(row.c[3].v) : 5;
+        var review  = row.c[4] ? row.c[4].v : '';
+        var date    = row.c[5] ? row.c[5].v : '';
+        var active  = row.c[6] ? row.c[6].v : '';
+        if (active && active.toString().toUpperCase() === 'TRUE' && review) {
+          cards.push({name:name, loc:loc, service:service, rating:rating, review:review, date:date});
+        }
+      });
+      if (!cards.length) { grid.innerHTML = '<div style="text-align:center;color:#aab;font-size:13px;padding:24px;grid-column:1/-1;">Reviews coming soon!</div>'; return; }
+      grid.innerHTML = '';
+      cards.forEach(function(card) {
+        var stars = '';
+        for (var i=0; i<5; i++) stars += i < card.rating ? '&#9733;' : '&#9734;';
+        var div = document.createElement('div');
+        div.className = 'testimonial-card';
+        div.innerHTML = '<div class="testimonial-stars">' + stars + '</div>'
+          + '<div class="testimonial-text">&ldquo;' + card.review + '&rdquo;</div>'
+          + '<div class="testimonial-author">' + card.name + (card.loc ? ' &bull; ' + card.loc : '') + '</div>'
+          + '<div class="testimonial-meta">' + (card.service || '') + (card.date ? ' &bull; ' + card.date : '') + '</div>';
+        grid.appendChild(div);
+      });
+    })
+    .catch(function() {
+      document.getElementById('testimonials-grid').innerHTML = '<div style="text-align:center;color:#aab;font-size:13px;padding:24px;grid-column:1/-1;">Reviews coming soon!</div>';
+    });
+}
+
+window.addEventListener('load', function() {
+  loadPhotos();
+  loadTestimonials();
+});
 
 </script>
 </body>
