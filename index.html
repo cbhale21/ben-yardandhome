@@ -1118,7 +1118,18 @@ function loadTestimonials() {
         var service = row.c[2] ? row.c[2].v : '';
         var rating  = row.c[3] ? parseInt(row.c[3].v) : 5;
         var review  = row.c[4] ? row.c[4].v : '';
-        var date    = row.c[5] ? row.c[5].v : '';
+        var rawDate = row.c[5] ? row.c[5].v : '';
+        var date = '';
+        if (rawDate) {
+          // Handle Date() format from Google Sheets e.g. "Date(2026,4,9)"
+          var dm = String(rawDate).match(/Date\((\d+),(\d+),(\d+)\)/);
+          if (dm) {
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            date = months[parseInt(dm[2])] + ' ' + dm[3] + ', ' + dm[1];
+          } else {
+            date = String(rawDate);
+          }
+        }
         var active  = row.c[6] ? row.c[6].v : '';
         if (active && active.toString().toUpperCase() === 'TRUE' && review) {
           cards.push({name:name, loc:loc, service:service, rating:rating, review:review, date:date});
